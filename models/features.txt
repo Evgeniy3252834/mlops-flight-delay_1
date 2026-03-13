@@ -1,0 +1,10 @@
+distance
+day_of_week
+is_weekend
+dep_hour
+month
+day_of_month
+dep_minute
+distance_km
+delay_ratio
+significant_delay
