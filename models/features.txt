@@ -1,3 +1,7 @@
+dep_time
+dep_delay
+arr_time
+arr_delay
 distance
 day_of_week
 is_weekend
