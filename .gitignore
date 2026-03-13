@@ -45,7 +45,6 @@ backup_mlruns/
 *.pyc
 __pycache__/
 *.log
-*.sh
 test_*.py
 train_*.py
 view_*.py
