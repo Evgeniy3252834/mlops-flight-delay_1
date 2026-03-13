@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Упрощенная детекция дрейфа - исправленная версия
+Упрощенная детекция дрейфа - финальная версия
 """
 
 import json
@@ -13,10 +13,15 @@ import sys
 from datetime import datetime
 
 import joblib
+import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("reports/drift_check.log"), logging.StreamHandler()],
+)
 logger = logging.getLogger(__name__)
 
 THRESHOLDS = {"performance_drift": 0.05}
@@ -44,11 +49,6 @@ def check_drift():
     expected_features = model.feature_names_in_.tolist()
     logger.info(f"Модель ожидает {len(expected_features)} признаков")
 
-    # Проверяем наличие всех признаков
-    missing_features = [f for f in expected_features if f not in reference_df.columns]
-    if missing_features:
-        logger.warning(f"Отсутствуют признаки: {missing_features}")
-
     # Используем только те признаки, которые есть
     common_features = [f for f in expected_features if f in reference_df.columns]
     logger.info(f"Используем {len(common_features)} общих признаков")
@@ -67,7 +67,7 @@ def check_drift():
     ref_acc = accuracy_score(y_ref, ref_pred)
     cur_acc = accuracy_score(y_cur, cur_pred)
 
-    logger.info(f"\n📈 Производительность:")
+    logger.info("\n📈 Производительность:")
     logger.info(f"   Reference accuracy: {ref_acc:.4f}")
     logger.info(f"   Current accuracy: {cur_acc:.4f}")
     logger.info(f"   Дрейф: {ref_acc - cur_acc:.4f}")
@@ -103,12 +103,16 @@ def check_drift():
         "current_accuracy": float(cur_acc),
         "drift_detected": drift_detected,
         "features_used": len(common_features),
+        "threshold": THRESHOLDS["performance_drift"],
     }
 
-    with open("reports/drift_report_simple.json", "w") as f:
+    # Создаем директорию если нет
+    os.makedirs("reports", exist_ok=True)
+
+    with open("reports/drift_report.json", "w") as f:
         json.dump(report, f, indent=2)
 
-    logger.info("✅ Отчет сохранен в reports/drift_report_simple.json")
+    logger.info("✅ Отчет сохранен в reports/drift_report.json")
     return drift_detected
 
 
