@@ -6,7 +6,7 @@ import logging
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,14 +27,91 @@ class FlightFeatures(BaseModel):
     distance: int
     flight_date: str
 
+    @validator("carrier")
+    def validate_carrier(cls, v):
+        valid_carriers = ["AA", "DL", "UA", "WN", "B6"]
+        if v not in valid_carriers:
+            raise ValueError(f"carrier must be one of {valid_carriers}")
+        return v
+
+    @validator("origin")
+    def validate_origin(cls, v):
+        valid_airports = ["JFK", "LAX", "ORD", "DFW", "DEN", "ATL", "SFO"]
+        if v not in valid_airports:
+            raise ValueError(f"origin must be one of {valid_airports}")
+        return v
+
+    @validator("dest")
+    def validate_dest(cls, v):
+        valid_airports = ["JFK", "LAX", "ORD", "DFW", "DEN", "ATL", "SFO"]
+        if v not in valid_airports:
+            raise ValueError(f"dest must be one of {valid_airports}")
+        return v
+
+    @validator("dep_time")
+    def validate_dep_time(cls, v):
+        if v < 0 or v > 2359:
+            raise ValueError("dep_time must be between 0 and 2359")
+        if v % 100 >= 60:
+            raise ValueError("minutes must be between 0 and 59")
+        return v
+
+    @validator("distance")
+    def validate_distance(cls, v):
+        if v <= 0:
+            raise ValueError("distance must be positive")
+        if v > 10000:
+            raise ValueError("distance too large")
+        return v
+
 
 class PredictionResponse(BaseModel):
     delay_probability: float
     prediction: int
 
 
+@app.get("/")
+async def root():
+    """Корневой endpoint"""
+    return {
+        "message": "Flight Delay Prediction API",
+        "version": "1.0.0",
+        "endpoints": ["/health", "/predict", "/info"],
+    }
+
+
+@app.get("/health")
+async def health():
+    """Проверка здоровья"""
+    return {"status": "ok", "model_loaded": True}
+
+
+@app.post("/predict", response_model=PredictionResponse)
+async def predict(features: FlightFeatures):
+    """Предсказание задержки"""
+    try:
+        # Валидация уже прошла через Pydantic
+        df = create_features(features)
+        proba = model.predict_proba(df)[0, 1]
+        pred = int(proba > 0.5)
+
+        return PredictionResponse(delay_probability=float(proba), prediction=pred)
+    except ValueError as e:
+        # Ошибки валидации
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        logger.error(f"Ошибка: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/info")
+async def info():
+    """Информация о модели"""
+    return {"features": model_features[:10], "features_count": len(model_features)}
+
+
 def create_features(req: FlightFeatures) -> pd.DataFrame:
-    """Создание признаков в том же порядке, что и при обучении"""
+    """Создание признаков"""
 
     # База
     data = {col: [0] for col in model_features}
@@ -50,17 +127,15 @@ def create_features(req: FlightFeatures) -> pd.DataFrame:
     data["distance"] = [req.distance]
     data["distance_km"] = [req.distance * 1.60934]
 
-    # One-hot encoding для carrier
+    # One-hot encoding
     carriers = ["AA", "DL", "UA", "WN", "B6"]
     for c in carriers:
         data[f"carrier_{c}"] = [1 if req.carrier == c else 0]
 
-    # One-hot для origin
     origins = ["JFK", "LAX", "ORD", "DFW", "DEN"]
     for o in origins:
         data[f"origin_{o}"] = [1 if req.origin == o else 0]
 
-    # One-hot для dest
     dests = ["JFK", "LAX", "ORD", "DFW", "DEN"]
     for d in dests:
         data[f"dest_{d}"] = [1 if req.dest == d else 0]
@@ -86,29 +161,6 @@ def create_features(req: FlightFeatures) -> pd.DataFrame:
 
     logger.info(f"Создано признаков: {df.shape[1]}")
     return df
-
-
-@app.post("/predict")
-async def predict(features: FlightFeatures):
-    try:
-        df = create_features(features)
-        proba = model.predict_proba(df)[0, 1]
-        pred = int(proba > 0.5)
-
-        return PredictionResponse(delay_probability=float(proba), prediction=pred)
-    except Exception as e:
-        logger.error(f"Ошибка: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/health")
-async def health():
-    return {"status": "ok", "model_loaded": True}
-
-
-@app.get("/info")
-async def info():
-    return {"features": model_features[:10], "features_count": len(model_features)}
 
 
 if __name__ == "__main__":
