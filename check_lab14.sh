@@ -25,10 +25,7 @@ else
     echo "❌ project_report.md не найден"
 fi
 
-    echo "❌ Инструкция для демо не найдена"
-fi
-
-# Проверка 4: Все лабораторные выполнены
+# Проверка 3: Все лабораторные выполнены
 LAB_COUNT=$(ls -la lab* 2>/dev/null | wc -l)
 if [ $LAB_COUNT -ge 10 ]; then
     echo "✅ Все лабораторные работы на месте"
@@ -37,7 +34,7 @@ else
     echo "⚠️ Некоторые лабораторные отсутствуют (но это норм)"
 fi
 
-# Проверка 5: Git коммит
+# Проверка 4: Git коммит
 if git log --oneline | grep -q "lab14"; then
     echo "✅ Коммит лабораторной 14 найден"
     SCORE=$((SCORE+1))
@@ -45,7 +42,7 @@ else
     echo "❌ Коммит не найден"
 fi
 
-# Проверка 6: Чистота рабочей директории
+# Проверка 5: Чистота рабочей директории
 if [ -z "$(git status --porcelain)" ]; then
     echo "✅ Рабочая директория чиста"
     SCORE=$((SCORE+1))
@@ -54,25 +51,25 @@ else
     git status -s
 fi
 
-# Проверка 7: Наличие всех ключевых компонентов
+# Проверка 6: Наличие всех ключевых компонентов
 if [ -d "src" ] && [ -d "data" ] && [ -d "models" ] && [ -d "reports" ]; then
     echo "✅ Ключевые директории присутствуют"
     SCORE=$((SCORE+1))
 fi
 
-# Проверка 8: Наличие Dockerfile
+# Проверка 7: Наличие Dockerfile
 if [ -f "Dockerfile" ] || [ -f "Dockerfile.prod" ]; then
     echo "✅ Dockerfile существует"
     SCORE=$((SCORE+1))
 fi
 
-# Проверка 9: Наличие Kubernetes манифестов
+# Проверка 8: Наличие Kubernetes манифестов
 if [ -d "k8s" ] && [ -f "k8s/deployment.yaml" ]; then
     echo "✅ Kubernetes манифесты существуют"
     SCORE=$((SCORE+1))
 fi
 
-# Проверка 10: Наличие CI/CD
+# Проверка 9: Наличие CI/CD
 if [ -d ".github/workflows" ] && [ -f ".github/workflows/deploy.yml" ]; then
     echo "✅ CI/CD пайплайн настроен"
     SCORE=$((SCORE+1))
@@ -84,7 +81,7 @@ echo "ИТОГ: $SCORE/$TOTAL"
 if [ $SCORE -eq $TOTAL ]; then
     echo "🔥 ЛАБОРАТОРНАЯ РАБОТА 14 ВЫПОЛНЕНА! 🔥"
     echo "🎉 ПОЗДРАВЛЯЮ! ВСЕ 14 ЛАБОРАТОРНЫХ ГОТОВЫ! 🎉"
-elif [ $SCORE -ge 8 ]; then
+elif [ $SCORE -ge 7 ]; then
     echo "⚠️ Выполнено $SCORE из $TOTAL - почти готово"
 else
     echo "❌ Выполнено $SCORE из $TOTAL - нужно доработать"
