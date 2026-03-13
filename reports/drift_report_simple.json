@@ -1,7 +1,0 @@
-{
-  "timestamp": "2026-03-13T23:08:21.127242",
-  "reference_accuracy": 0.95,
-  "current_accuracy": 0.85,
-  "drift_detected": true,
-  "features_used": 10
-}
