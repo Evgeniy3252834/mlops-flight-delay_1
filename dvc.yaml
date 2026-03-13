@@ -1,0 +1,9 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - data/raw/flights_sample.csv
+    - src/preprocess.py
+    outs:
+    - data/processed/features_info.json
+    - data/processed/processed.csv
