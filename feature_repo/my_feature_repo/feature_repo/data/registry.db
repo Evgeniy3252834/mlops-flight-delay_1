@@ -1,0 +1,59 @@
+
+\
+<
+carrierÐÐ²Ð¸Ð°ÐºÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ"carrierJflight_delay
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°
+K
++
+hourÐ§Ð°Ñ Ð´Ð½Ñ"hourJflight_delay
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°
+T
+4
+airportÐÑÑ€Ð¾Ð¿Ð¾Ñ€Ñ‚"airportJflight_delay
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°
+C
+#
+__dummy"
+__dummy_idJflight_delay
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°1"$dd650562-d59d-4cd0-9306-cbd53dd14b95*Ò€ÑÍ¸ñº°2š
+ù
+hourly_statisticsflight_delayhour"
+	avg_delay"
+
+delay_rate"
+flight_count2€ç„:‹event_timestamp*created_timestampZdata/hourly_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/hourly_stats.csv@b
+hour
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°2ð
+Ï
+airport_statisticsflight_delayairport"
+avg_dep_delay"
+dep_delay_rate"
+flight_count_origin"
+avg_arr_delay"
+arr_delay_rate"
+flight_count_dest2€ç„:event_timestamp*created_timestampZdata/airport_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/airport_stats.csv@b
+airport
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°2à
+¿
+carrier_statisticsflight_delaycarrier"
+avg_dep_delay"
+std_dep_delay"
+flight_count"
+avg_arr_delay"
+std_arr_delay"
+
+delay_rate2€ç„:event_timestamp*created_timestampZdata/carrier_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/carrier_stats.csv@b
+carrier
+Ò€ÑÍ¸ñº°Ò€ÑÍ¸ñº°R¿
+½
+,feast.infra.online_stores.sqlite.SqliteTable"Œ
+iC:\Users\Ð•Ð²Ð³ÐµÐ½Ð¸Ð¹\mlops-flight-delay\feature_repo\my_feature_repo\feature_repo\data\online_store.dbflight_delay_airport_statistics
+½
+,feast.infra.online_stores.sqlite.SqliteTable"Œ
+iC:\Users\Ð•Ð²Ð³ÐµÐ½Ð¸Ð¹\mlops-flight-delay\feature_repo\my_feature_repo\feature_repo\data\online_store.dbflight_delay_carrier_statistics
+¼
+,feast.infra.online_stores.sqlite.SqliteTable"‹
+iC:\Users\Ð•Ð²Ð³ÐµÐ½Ð¸Ð¹\mlops-flight-delay\feature_repo\my_feature_repo\feature_repo\data\online_store.dbflight_delay_hourly_statisticsbœevent_timestamp*created_timestampZdata/carrier_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/carrier_stats.csvªflight_delaybševent_timestamp*created_timestampZdata/hourly_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/hourly_stats.csvªflight_delaybœevent_timestamp*created_timestampZdata/airport_stats.csvŠ1feast.infra.offline_stores.file_source.FileSource¢data/airport_stats.csvªflight_delayŠ.
+
+flight_delay
+Ò€ÑÍðŸ™Ò€ÑÍðŸ™
