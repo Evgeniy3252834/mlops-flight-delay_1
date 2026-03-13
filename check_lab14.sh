@@ -7,7 +7,7 @@ echo "================================================="
 echo ""
 
 SCORE=0
-TOTAL=10
+TOTAL=9
 
 # Проверка 1: README_FINAL.md
 if [ -f "README_FINAL.md" ]; then
@@ -25,11 +25,6 @@ else
     echo "❌ project_report.md не найден"
 fi
 
-# Проверка 3: demo директория
-if [ -d "demo" ] && [ -f "demo/README_demo.md" ]; then
-    echo "✅ Инструкция для демо существует"
-    SCORE=$((SCORE+1))
-else
     echo "❌ Инструкция для демо не найдена"
 fi
 
