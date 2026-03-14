@@ -1,0 +1,6 @@
+channels:
+  - defaults
+envs_dirs:
+  - D:\conda\envs
+pkgs_dirs:
+  - D:\conda\pkgs

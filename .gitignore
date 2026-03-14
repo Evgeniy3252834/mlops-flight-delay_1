@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# DVC
+.dvc/tmp/
+dvc_remote/
+
+# MLflow
+mlruns/
+
+# Data (но не .dvc файлы)
+*.csv
+*.parquet
+*.pkl
+*.joblib
+!*.csv.dvc
+!*.parquet.dvc
+
+# Airflow
+airflow/airflow.db
+airflow/logs/
+
+# Feast
+feature_repo/data/
+
+# Temporary files
+backup/
+backup_mlruns/
+*_backup_*/
+*.pyc
+__pycache__/
+*.log
+test_*.py
+train_*.py
+view_*.py
+setup_*.py
+nul
+8080

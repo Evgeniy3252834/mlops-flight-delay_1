@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flight-delay-api-config
+data:
+  model_path: "models/model.joblib"
+  features_path: "models/features.txt"
+  log_level: "INFO"

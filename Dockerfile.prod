@@ -1,0 +1,36 @@
+FROM python:3.10-slim as builder
+
+WORKDIR /app
+
+# Устанавливаем зависимости
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Production stage
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Копируем зависимости из builder
+COPY --from=builder /root/.local /root/.local
+
+# Копируем код
+COPY src/ ./src/
+COPY models/ ./models/
+
+# Добавляем путь к локальным бинам
+ENV PATH=/root/.local/bin:$PATH
+
+# Создаем непривилегированного пользователя
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Хелсчек
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD python -c "import requests; requests.get('http://localhost:8080/health')" || exit 1
+
+# Экспортируем порт
+EXPOSE 8080
+
+# Запускаем с gunicorn для production
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"]
